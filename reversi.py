@@ -237,9 +237,9 @@ def CompStone():
     stone_grid.active = False
     if stone_grid.NextStone(index.stone, pos) == True:
         if index.stone == black:
-            pre = comp.sente_stone(stone_grid.map[1:],stone_grid.arr)
+            pre = comp.sente_stone(stone_grid.map[1:],stone_grid.arr[1:])
         elif index.stone == white:
-            pre = comp.gote_stone(stone_grid.map[1:],stone_grid.arr) 
+            pre = comp.gote_stone(stone_grid.map[1:],stone_grid.arr[1:]) 
         if stone_grid.CanSetStone(index.stone, pre[0], pre[1], True) == False:                                 
             stone_grid.CanSetStone(index.stone, pos[0], pos[1], True) 
     ChangePlayer()
