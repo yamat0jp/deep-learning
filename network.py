@@ -8,7 +8,7 @@ from keras.layers import Dense,Dropout,Activation
 from keras.wrappers.scikit_learn import KerasClassifier
 
 class  Comp():
-    def init(self):
+    def __init__(self):
         self.model1,self.model2 = Sequential(),Sequential()
 
         self.model1.add(Dense(50,input_shape=(64,)))
@@ -42,8 +42,8 @@ class  Comp():
         return [res % 8, res // 8]
 
     def gote_stone(self,X_train,Y_train):
-        #self.model2.fit(X_train,Y_train)
-        #hdf5_file ='./gote-model.hdf5'
-        #self.model2.save_weights(hdf5_file)
+        self.model2.fit(X_train,Y_train)
+        hdf5_file ='./gote-model.hdf5'
+        self.model2.save_weights(hdf5_file)
         res = self.model2.predict(X_train,Y_train)
         return [res % 8, res // 8]

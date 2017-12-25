@@ -11,7 +11,6 @@ from network import Comp
 
 pygame.font.init()
 comp = Comp()
-comp.init()
 screen = pygame.display.set_mode((400,400))
 
 none, black, white, effect = 0,1,2,3
