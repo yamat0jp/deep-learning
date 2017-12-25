@@ -106,6 +106,7 @@ class StoneGrid():
                             while j <= i-1:
                                 self.item.grid[x+m*j][y+n*j] = stone
                                 j += 1
+                            Paint()
                             break
                         else:
                             p[0],p[1] = False,True
@@ -158,37 +159,7 @@ class StoneGrid():
         
     def Pause(self):
         self.active = False
-        
-    def ListExecute(self):
-        while True:
-            i = 0            
-            for x in self.list:                
-                if x.X < index_x-1:
-                    x.X += 1
-                elif x.Y < index_y-1:
-                    x.X = 0
-                    x.Y += 1
-                else:
-                    self.item.grid[x.Left][x.Top] = self.effect_stone
-                    self.list.remove(x)
-                pygame.time.wait(5)                
-                i += 1              
-                self.Paint() 
-                pygame.display.update()            
-            if len(self.list) == 0:                              
-                if self.turn_index < 60:                               
-                    self.turn_index += 1
-                    self.turn_number += 1  
-                    self.buffer[self.turn_index].Assign(self.item)        
-                    self.buffer[self.turn_index].stone = self.effect_stone                                                    
-                    Paint()
-                    ChangePlayer()       
-                    if self.gameover == False:             
-                        self.active = True
-                else:
-                    self.gameover = True
-                break                   
-       
+               
     def Paint(self):
         if self.effect_stone == black:
             s = bkwhite           
