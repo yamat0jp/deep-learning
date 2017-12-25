@@ -269,7 +269,7 @@ def CompStone():
     i = 1 
     for y in range(8):
         for x in range(8):
-            stone_grid.map[i] = stone_grid.item.grid[x,y]
+            stone_grid.map[i] = stone_grid.item.grid[x][y]
             i += 1
     stone_grid.active = False
     if stone_grid.NextStone(index.stone, pos) == True:
@@ -285,7 +285,7 @@ player1 = Player()
 player2 = Player()
 index = player1
 player1.stone = black
-player1.auto = False
+player1.auto = True
 player2.auto = True
 player2.stone = white
 stone_grid = StoneGrid()
