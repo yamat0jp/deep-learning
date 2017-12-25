@@ -101,7 +101,6 @@ class StoneGrid():
                             while j <= i-1:
                                 self.item.grid[x+m*j][y+n*j] = stone
                                 j += 1
-                            Paint()
                         else:
                             p[0],p[1] = False,True
                     break
@@ -130,7 +129,7 @@ class StoneGrid():
                 if self.CalScore(stone, i, j) == True:
                     if result == False:
                         result = True
-                    self.arr[1+(j-1)*8+i] = self.score
+                    self.arr[1+j*8+i] = self.score
                     if self.score > n:
                         n = self.score
                     pos[0],pos[1] = i,j

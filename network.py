@@ -39,14 +39,18 @@ class  Comp():
         X,Y = np.array([X_train]),np.array([Y_train]) 
         self.model1.fit(X,Y)
         hdf5_file = './sente-model.hdf5'
-        self.model1.save_weights(hdf5_file)
+        #self.model1.save_weights(hdf5_file)
         res = self.model1.predict(X,Y)
-        return [res % 8, res // 8]
+        for i in range(len(res[0])):
+            if res[0][i] != 0:
+                return [i % 8, i // 8]
 
     def gote_stone(self,X_train,Y_train):
         X,Y=np.array([X_train]),np.array([Y_train])
         self.model2.fit(X,Y)
         hdf5_file ='./gote-model.hdf5'
-        self.model2.save_weights(hdf5_file)
+        #self.model2.save_weights(hdf5_file)
         res = self.model2.predict(X,Y)
-        return [res % 8, res // 8]
+        for i in range(len(res[0])):
+            if res[0][i] != 0:
+                return [i % 8, i // 8]
