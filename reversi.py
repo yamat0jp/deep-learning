@@ -13,7 +13,7 @@ pygame.font.init()
 comp = Comp()
 screen = pygame.display.set_mode((400,400))
 
-none, black, white, effect = 0,1,2,3
+none, black, white = 0,1,2
 
 def Path():
     for name in sys.argv:
@@ -32,17 +32,11 @@ class Player():
     auto = False
     stone = none
 
-class Effect(Thread):
-    def __init__(self):
-        self.X = 0
-        self.Y = 0
-        self.Left = 0
-        self.Top = 0
-
 class Grid():       
     def __init__(self):        
         self.grid = [[none for y in range(8)] for x in range(8)]
-        self.stone = none    
+        self.stone = none   
+         
     def Assign(self,item):
         for x in range(8):
             for y in range(8):
@@ -53,12 +47,10 @@ class StoneGrid():
         self.arr = [-1 for x in range(65)]
         self.map = [-1 for x in range(65)]
         self.item = Grid()
-        self.buffer = [Grid() for x in range(61)]
+        self.buffer = Grid()
         self.turn_number = 0
         self.turn_index = 0
         self.active = True
-        self.list = []        
-        self.effect_stone = none
         self.gameover = False
         self.text = pygame.font.SysFont(pygame.font.get_fonts()[0], 25, True).render('reversi',False,(0,0,255)).convert()        
     
@@ -72,14 +64,18 @@ class StoneGrid():
         self.item.grid[3][4] = white 
         self.turn_index = 0
         self.turn_number = 0
-        self.buffer[0].Assign(self.item)
         
     def CalScore(self,stone,x,y):
-        def Normal():
-            for x in range(8):
-                for y in range(8):
-                    if self.CanSetStone(stone, x, y, False) == True:
+        self.buffer.Assign(self.item)
+        if self.CanSetStone(stone, x, y, True) == True:
+            for i in range(8):
+                for j in range(8):
+                    if self.CanSetStone(stone, i, j, False) == True:
                         self.score += 1
+            self.item.Assign(self.buffer)
+            return True
+        else:
+            return False
                                            
     def CanSetStone(self,stone,x,y,reverse):
         p = [True,False]        
@@ -93,27 +89,22 @@ class StoneGrid():
                 if not ((0 <= d)and(d < 8)and(0 <= e)and(e < 8)):
                     break
                 s = self.item.grid[d][e]
-                if s == effect:
-                    s = self.effect_stone
                 if s == none:
                     break
                 elif s == stone:                                
                     if i > 1:
-                        if (p[1] == False)and(reverse == True):
-                            self.item.grid[x][y] = stone
-                            p[1] = True
-                        if reverse == True:                            
+                        if reverse == True:   
+                            if p[1] == False:
+                                self.item.grid[x][y] = stone
+                                p[1] = True                         
                             j = 1
                             while j <= i-1:
                                 self.item.grid[x+m*j][y+n*j] = stone
                                 j += 1
                             Paint()
-                            break
                         else:
                             p[0],p[1] = False,True
-                            break
-                    else:
-                        break
+                    break
                 else:
                     i += 1
                    
@@ -126,6 +117,8 @@ class StoneGrid():
             Method(1, -1)
             Method(1, 0)
             Method(1, 1)
+        if (p[1] == True)and(reverse == True):
+            ChangePlayer()
         return p[1]
                             
     def NextStone(self,stone,pos):
@@ -181,8 +174,6 @@ def Paint():
                 screen.blit(img,r,pygame.Rect(2*size,0,3*size,size))
             elif s == black:
                 screen.blit(img,r,pygame.Rect(size,0,2*size,size))
-            elif s == effect:
-                continue
             else:
                 screen.blit(img,r,pygame.Rect(0,0,size,size))
     if stone_grid.gameover == True:
@@ -246,13 +237,12 @@ def CompStone():
     stone_grid.active = False
     if stone_grid.NextStone(index.stone, pos) == True:
         if index.stone == black:
-            pre = comp.sente_stone(stone_grid.map,stone_grid.arr)
+            pre = comp.sente_stone(stone_grid.map[1:],stone_grid.arr)
         elif index.stone == white:
-            pre = comp.gote_stone(stone_grid.map,stone_grid.arr) 
+            pre = comp.gote_stone(stone_grid.map[1:],stone_grid.arr) 
         if stone_grid.CanSetStone(index.stone, pre[0], pre[1], True) == False:                                 
             stone_grid.CanSetStone(index.stone, pos[0], pos[1], True) 
-    else:
-        ChangePlayer()
+    ChangePlayer()
                  
 player1 = Player()
 player2 = Player()
@@ -281,6 +271,6 @@ while True:
     if (index.auto == False)and(stone_grid.active == True)and(t == True):            
         stone_grid.active = False
         s = pygame.mouse.get_pos()
-        stone_grid.CanSetStone(index.stone,s[0]//50,s[1]//50,True)         
+        stone_grid.CanSetStone(index.stone,s[0]//size,s[1]//size,True)  
         stone_grid.active = True    
         
