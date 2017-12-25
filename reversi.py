@@ -6,10 +6,12 @@ Created on 2015/08/25
 import pygame,os,sys
 from pygame.locals import *
 from threading import Thread
-from network import * 
+from network import Comp
 
 
 pygame.font.init()
+comp = Comp()
+comp.init()
 screen = pygame.display.set_mode((400,400))
 
 none, black, white, effect = 0,1,2,3
@@ -245,9 +247,9 @@ def CompStone():
     stone_grid.active = False
     if stone_grid.NextStone(index.stone, pos) == True:
         if index.stone == black:
-            pre = sente_stone(stone_grid.map,stone_grid.arr)
+            pre = comp.sente_stone(stone_grid.map,stone_grid.arr)
         elif index.stone == white:
-            pre = gote_stone(stone_grid.map,stone_grid.arr) 
+            pre = comp.gote_stone(stone_grid.map,stone_grid.arr) 
         if stone_grid.CanSetStone(index.stone, pre[0], pre[1], True) == False:                                 
             stone_grid.CanSetStone(index.stone, pos[0], pos[1], True) 
     else:
