@@ -245,7 +245,7 @@ player1 = Player()
 player2 = Player()
 index = player1
 player1.stone = black
-player1.auto = True
+player1.auto = False
 player2.auto = True
 player2.stone = white
 stone_grid = StoneGrid()
@@ -254,13 +254,17 @@ pygame.event.get()
 temp = pygame.time.get_ticks()
 Paint()
 tt = (player1.auto == True)and(player2.auto == True)
+if tt == True:
+    k = 10
+else:
+    k = 150
 while True:    
-    if pygame.time.get_ticks()-temp > 300:
+    if pygame.time.get_ticks()-temp > 2*k:
         if (stone_grid.active == True)and(index.auto == True):        
             CompStone()            
             ChangePlayer()                 
         temp = pygame.time.get_ticks()
-    pygame.time.wait(150)
+    pygame.time.wait(k)
     for x in pygame.event.get():
         if x.type == QUIT:
             sys.exit()    
