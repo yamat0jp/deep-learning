@@ -42,8 +42,7 @@ class  Comp():
         hdf5_file = './sente-model.hdf5'
         #self.model1.save_weights(hdf5_file)
         res = self.model1.predict(X,1)
-        i = 0
-        np.argmax(res, i)
+        i = np.argmax(res)
         print(res,i)
         return [i % 8, i // 8]
         
@@ -55,6 +54,5 @@ class  Comp():
         hdf5_file ='./gote-model.hdf5'
         #self.model2.save_weights(hdf5_file)
         res = self.model2.predict(X,1)
-        i = 0
-        np.argmax(res, i)
+        i = np.argmax(res)
         return [i % 8, i // 8]
