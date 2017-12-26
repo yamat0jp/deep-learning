@@ -36,8 +36,8 @@ class  Comp():
 
     def sente_stone(self,X_train,Y_train):
         X,Y = np.array(X_train),np.array(Y_train) 
-        X = np.reshape(X,0,[])
-        Y = np.reshape(Y,0,[])
+        X = np.reshape(X,[],1)
+        Y = np.reshape(Y,[],1)
         self.model1.fit(X,Y)
         hdf5_file = './sente-model.hdf5'
         #self.model1.save_weights(hdf5_file)

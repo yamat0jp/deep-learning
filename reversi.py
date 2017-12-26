@@ -5,9 +5,7 @@ Created on 2015/08/25
 '''
 import pygame,os,sys
 from pygame.locals import *
-from threading import Thread
 from network import Comp
-from matplotlib.pyplot import grid
 
 
 pygame.font.init()
@@ -130,16 +128,17 @@ class StoneGrid():
                 if self.CalScore(stone, i, j) == True:
                     if result == False:
                         result = True
-                    self.arr[i][j] = self.score
+                    self.arr.grid[i][j] = self.score
                     if self.score > n:
                         n = self.score
                     pos[0],pos[1] = i,j
                 else:
-                    self.arr[i][j] = -1
+                    self.arr.grid[i][j] = -1
         for i in range(8):
             for j in range(8):
-                if self.arr[i][j] != -1:
-                    self.arr[i][j] = (n-self.arr[i][j])/n
+                k = self.arr.grid[i][j]
+                if k != -1:
+                    self.arr.grid[i][j] = (n-k)/n
         return result
     
     def Start(self):       
@@ -234,7 +233,7 @@ def CompStone():
     stone_grid.active = False
     if stone_grid.NextStone(index.stone, pos) == True:
         if index.stone == black:
-            pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr)
+            pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid)
         elif index.stone == white:
             pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr) 
         if stone_grid.CanSetStone(index.stone, pre[0], pre[1], True) == False:                                 
