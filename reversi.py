@@ -266,7 +266,7 @@ while True:
         if x.type == QUIT:
             sys.exit()    
     t = pygame.mouse.get_pressed()[0]
-    if (stone_grid.gameover == True)and(t == True):
+    if (stone_grid.gameover == True)and((t == True)or((player1.auto == True)and(player2.auto == True))):
         stone_grid.Start()
     if (index.auto == False)and(stone_grid.active == True)and(t == True):            
         stone_grid.active = False
