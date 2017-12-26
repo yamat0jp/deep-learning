@@ -6,6 +6,7 @@ Created on 2017/12/25
 from keras.models import Sequential
 from keras.layers import Dense,Dropout,Activation    
 import numpy as np
+import os
 
 class  Comp():
     def __init__(self):
@@ -34,8 +35,13 @@ class  Comp():
             optimizer='adam',
             metrics=['accuracy'])
         
-        self.model1.load_weights('sente-model.hdf5')
-        self.model2.load_weights('gote-model.hdf5')
+        
+        s = 'sente-model.hdf5'
+        if os.path.exists(s):
+            self.model1.load_weights(s)
+        s = 'gote-model.hdf5'
+        if os.path.exists(s):
+            self.model2.load_weights(s)
         
     def sente_stone(self,X_train,Y_train):
         X,Y = np.array(X_train),np.array(Y_train) 

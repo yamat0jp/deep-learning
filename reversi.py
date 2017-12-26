@@ -45,7 +45,6 @@ class StoneGrid():
     def __init__(self):    
         self.item = Grid()
         self.buffer = Grid()
-        self.map = Grid()
         self.arr = Grid()
         self.turn_number = 0
         self.turn_index = 0
@@ -67,14 +66,14 @@ class StoneGrid():
     def CalScore(self,stone,x,y):
         self.buffer.Assign(self.item)
         if self.CanSetStone(stone, x, y, True) == True:
+            self.score = 0
             for i in range(8):
                 for j in range(8):
                     if self.CanSetStone(stone, i, j, False) == True:
                         self.score += 1
             self.item.Assign(self.buffer)
-            return True
         else:
-            return False
+            self.score = -1
                                            
     def CanSetStone(self,stone,x,y,reverse):
         p = [True,False]        
@@ -123,7 +122,8 @@ class StoneGrid():
         self.score = 0
         for i in range(8):
             for j in range(8):
-                if self.CalScore(stone, i, j) == True:
+                self.CalScore(stone, i, j)
+                if self.score != -1:
                     if result == False:
                         result = True
                     self.arr.grid[i][j] = self.score
