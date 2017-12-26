@@ -237,6 +237,7 @@ def CompStone():
             pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid)
         elif index.stone == white:
             pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid) 
+            print(pre,'hit!')
         if stone_grid.CanSetStone(index.stone, pre[0], pre[1], True) == False:
             print(pre,'=>',pos)                                 
             stone_grid.CanSetStone(index.stone, pos[0], pos[1], True) 
@@ -246,7 +247,7 @@ player1 = Player()
 player2 = Player()
 index = player1
 player1.stone = black
-player1.auto = True
+player1.auto = False
 player2.auto = True
 player2.stone = white
 stone_grid = StoneGrid()
@@ -265,7 +266,8 @@ while True:
         if x.type == QUIT:
             sys.exit()    
     t = pygame.mouse.get_pressed()[0]
-    if (stone_grid.gameover == True)and((t == True)or((player1.auto == True)and(player2.auto == True))):
+    tt = (player1.auto == True)and(player2.auto == True)
+    if (stone_grid.gameover == True)and(t == True)or(tt == True):
         stone_grid.Start()
     if (index.auto == False)and(stone_grid.active == True)and(t == True):            
         stone_grid.active = False
