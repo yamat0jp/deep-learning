@@ -47,21 +47,32 @@ class  Comp():
         X,Y = np.array(X_train),np.array(Y_train) 
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
-        self.model1.fit(X,Y)
+        j = np.argmax(Y)
+        for i in range(10):
+            self.model1.fit(X,Y)
+            res = self.model1.predict(X,1)
+            s = np.argmax(res)
+            if s == j:
+                break
+        else:
+            s = j
         hdf5_file = './sente-model.hdf5'
         self.model1.save_weights(hdf5_file)
-        res = self.model1.predict(X,1)
-        i = np.argmax(res)
-        print(res,i)
-        return [i % 8, i // 8]
+        return [s // 8, s % 8]
         
     def gote_stone(self,X_train,Y_train):
         X,Y=np.array(X_train),np.array(Y_train)
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
-        self.model2.fit(X,Y)
+        j = np.argmax(Y)
+        for i in range(10):
+            self.model2.fit(X,Y)
+            res = self.model2.predict(X,1)
+            s = np.argmax(res)
+            if j == s:
+                break
+        else:
+            s = j
         hdf5_file ='./gote-model.hdf5'
         self.model2.save_weights(hdf5_file)
-        res = self.model2.predict(X,1)
-        i = np.argmax(res)
-        return [i % 8, i // 8]
+        return [s // 8, s % 8]
