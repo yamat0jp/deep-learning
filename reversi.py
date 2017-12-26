@@ -7,6 +7,7 @@ import pygame,os,sys
 from pygame.locals import *
 from threading import Thread
 from network import Comp
+from matplotlib.pyplot import grid
 
 
 pygame.font.init()
@@ -44,10 +45,10 @@ class Grid():
     
 class StoneGrid():
     def __init__(self):    
-        self.arr = [-1 for x in range(65)]
-        self.map = [-1 for x in range(65)]
         self.item = Grid()
         self.buffer = Grid()
+        self.map = Grid()
+        self.arr = Grid()
         self.turn_number = 0
         self.turn_index = 0
         self.active = True
@@ -129,13 +130,16 @@ class StoneGrid():
                 if self.CalScore(stone, i, j) == True:
                     if result == False:
                         result = True
-                    self.arr[1+j*8+i] = self.score
+                    self.arr[i][j] = self.score
                     if self.score > n:
                         n = self.score
                     pos[0],pos[1] = i,j
-        for i in range(1,len(self.arr)):
-            if self.arr[i] != -1:
-                self.arr[i] = (n-self.arr[i])/n
+                else:
+                    self.arr[i][j] = -1
+        for i in range(8):
+            for j in range(8):
+                if self.arr[i][j] != -1:
+                    self.arr[i][j] = (n-self.arr[i][j])/n
         return result
     
     def Start(self):       
@@ -226,19 +230,13 @@ def ChangePlayer():
         
 def CompStone():
     pos = [0,0]
-    stone_grid.map[0] = index.stone
-    stone_grid.arr[0] = index.stone
     i = 1 
-    for y in range(8):
-        for x in range(8):
-            stone_grid.map[i] = stone_grid.item.grid[x][y]
-            i += 1
     stone_grid.active = False
     if stone_grid.NextStone(index.stone, pos) == True:
         if index.stone == black:
-            pre = comp.sente_stone(stone_grid.map[1:],stone_grid.arr[1:])
+            pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr)
         elif index.stone == white:
-            pre = comp.gote_stone(stone_grid.map[1:],stone_grid.arr[1:]) 
+            pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr) 
         if stone_grid.CanSetStone(index.stone, pre[0], pre[1], True) == False:                                 
             stone_grid.CanSetStone(index.stone, pos[0], pos[1], True) 
     ChangePlayer()

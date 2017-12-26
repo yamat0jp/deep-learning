@@ -5,7 +5,6 @@ Created on 2017/12/25
 '''
 from keras.models import Sequential
 from keras.layers import Dense,Dropout,Activation    
-from keras.wrappers.scikit_learn import KerasClassifier
 import numpy as np
 
 class  Comp():
@@ -36,7 +35,9 @@ class  Comp():
             metrics=['accuracy'])
 
     def sente_stone(self,X_train,Y_train):
-        X,Y = np.array([X_train]),np.array([Y_train]) 
+        X,Y = np.array(X_train),np.array(Y_train) 
+        X = np.reshape(X,0,[])
+        Y = np.reshape(Y,0,[])
         self.model1.fit(X,Y)
         hdf5_file = './sente-model.hdf5'
         #self.model1.save_weights(hdf5_file)
@@ -48,7 +49,9 @@ class  Comp():
             i += 1
 
     def gote_stone(self,X_train,Y_train):
-        X,Y=np.array([X_train]),np.array([Y_train])
+        X,Y=np.array(X_train),np.array(Y_train)
+        X = np.reshape(X,0,[])
+        Y = np.reshape(Y,0,[])
         self.model2.fit(X,Y)
         hdf5_file ='./gote-model.hdf5'
         #self.model2.save_weights(hdf5_file)
