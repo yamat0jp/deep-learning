@@ -33,7 +33,10 @@ class  Comp():
             loss='categorical_crossentropy',
             optimizer='adam',
             metrics=['accuracy'])
-
+        
+        self.model1.load_weights('sente-model.hdf5')
+        self.model2.load_weights('gote-model.hdf5')
+        
     def sente_stone(self,X_train,Y_train):
         X,Y = np.array(X_train),np.array(Y_train) 
         X = np.reshape(X,[1,64])
