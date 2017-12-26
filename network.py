@@ -40,7 +40,7 @@ class  Comp():
         Y = np.reshape(Y,[1,64])
         self.model1.fit(X,Y)
         hdf5_file = './sente-model.hdf5'
-        #self.model1.save_weights(hdf5_file)
+        self.model1.save_weights(hdf5_file)
         res = self.model1.predict(X,1)
         i = np.argmax(res)
         print(res,i)
@@ -52,7 +52,7 @@ class  Comp():
         Y = np.reshape(Y,[1,64])
         self.model2.fit(X,Y)
         hdf5_file ='./gote-model.hdf5'
-        #self.model2.save_weights(hdf5_file)
+        self.model2.save_weights(hdf5_file)
         res = self.model2.predict(X,1)
         i = np.argmax(res)
         return [i % 8, i // 8]

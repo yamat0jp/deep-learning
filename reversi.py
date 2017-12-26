@@ -184,12 +184,13 @@ def Paint():
 def ChangePlayer():  
     def Main():
         global index        
+        Paint()      
         if index == player1:
             index = player2
             return 'white'
         else:
             index = player1
-            return 'black'        
+            return 'black'  
     
     def Execute():
         for x in range(8):
@@ -223,8 +224,10 @@ def ChangePlayer():
             Paint()
         else:
             pygame.display.set_caption(s)
+            stone_grid.turn_index += 1
     else:
         pygame.display.set_caption(s)
+        stone_grid.turn_index += 1
         
 def CompStone():
     pos = [0,0]
@@ -256,8 +259,7 @@ while True:
     if pygame.time.get_ticks()-temp > 300:
         if (stone_grid.active == True)and(index.auto == True):        
             CompStone()            
-            ChangePlayer()  
-            Paint()                        
+            ChangePlayer()                 
         temp = pygame.time.get_ticks()
     pygame.time.wait(150)
     for x in pygame.event.get():
@@ -269,7 +271,8 @@ while True:
     if (index.auto == False)and(stone_grid.active == True)and(t == True):            
         stone_grid.active = False
         s = pygame.mouse.get_pos()
-        stone_grid.CanSetStone(index.stone,s[0]//size,s[1]//size,True) 
-        ChangePlayer() 
-        stone_grid.active = True    
+        if stone_grid.CanSetStone(index.stone,s[0]//size,s[1]//size,True) == True:
+            stone_grid.turn_index += 1            
+            ChangePlayer() 
+        stone_grid.active = True        
         
