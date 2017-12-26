@@ -47,15 +47,15 @@ class  Comp():
         X,Y = np.array(X_train),np.array(Y_train) 
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
-        j = np.argmax(Y)
         for i in range(10):
             self.model1.fit(X,Y)
             res = self.model1.predict(X,1)
             s = np.argmax(res)
-            if s == j:
+            if Y[0][s] != -1:
+                print('hit!')
                 break
         else:
-            s = j
+            s = np.argmax(Y)
         hdf5_file = './sente-model.hdf5'
         self.model1.save_weights(hdf5_file)
         return [s // 8, s % 8]
@@ -64,15 +64,15 @@ class  Comp():
         X,Y=np.array(X_train),np.array(Y_train)
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
-        j = np.argmax(Y)
         for i in range(10):
             self.model2.fit(X,Y)
             res = self.model2.predict(X,1)
             s = np.argmax(res)
-            if j == s:
+            if Y[0][s] != -1:
+                print('hit!')
                 break
         else:
-            s = j
+            s = np.argmax(Y)
         hdf5_file ='./gote-model.hdf5'
         self.model2.save_weights(hdf5_file)
         return [s // 8, s % 8]
