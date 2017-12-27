@@ -241,7 +241,7 @@ player1 = Player()
 player2 = Player()
 index = player1
 player1.stone = black
-player1.auto = True
+player1.auto = False
 player2.auto = True
 player2.stone = white
 stone_grid = StoneGrid()
@@ -267,7 +267,7 @@ while True:
     t = pygame.mouse.get_pressed()[0]
     if (stone_grid.gameover == True)and((t == True)or(tt == True)):
         stone_grid.Start()
-    if (index.auto == False)and(stone_grid.active == True)and(t == True):            
+    elif (index.auto == False)and(stone_grid.active == True)and(t == True):            
         stone_grid.active = False
         s = pygame.mouse.get_pos()
         if stone_grid.CanSetStone(index.stone,s[0]//size,s[1]//size,True) == True:
