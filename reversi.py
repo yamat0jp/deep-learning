@@ -143,6 +143,7 @@ class StoneGrid():
         self.Clear()
         self.active = True
         self.gameover = False
+        Paint()
         
     def ReStart(self):
         self.active = True
@@ -255,7 +256,7 @@ if tt == True:
 else:
     k = 150
 while True:    
-    if pygame.time.get_ticks()-temp > 2*k:
+    if (pygame.time.get_ticks()-temp > 2*k)and(stone_grid.gameover == False):
         if (stone_grid.active == True)and(index.auto == True):        
             CompStone()            
             ChangePlayer()                 
@@ -267,7 +268,7 @@ while True:
     t = pygame.mouse.get_pressed()[0]
     if (stone_grid.gameover == True)and((t == True)or(tt == True)):
         stone_grid.Start()
-    elif (index.auto == False)and(stone_grid.active == True)and(t == True):            
+    if (index.auto == False)and(stone_grid.active == True)and(t == True):            
         stone_grid.active = False
         s = pygame.mouse.get_pos()
         if stone_grid.CanSetStone(index.stone,s[0]//size,s[1]//size,True) == True:
