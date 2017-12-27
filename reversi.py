@@ -46,7 +46,6 @@ class StoneGrid():
         self.item = Grid()
         self.buffer = Grid()
         self.arr = Grid()
-        self.turn_number = 0
         self.turn_index = 0
         self.active = True
         self.gameover = False
@@ -116,20 +115,19 @@ class StoneGrid():
             Method(1, 1)
         return p[1]
                             
-    def NextStone(self,stone,pos):
-        result = False
+    def T_Data(self,stone):
+        x = False
         n = 0
         self.score = 0
         for i in range(8):
             for j in range(8):
                 self.CalScore(stone, i, j)
                 if self.score != -1:
-                    if result == False:
-                        result = True
+                    if x == False:
+                        x = True
                     self.arr.grid[i][j] = self.score
                     if self.score > n:
                         n = self.score
-                    pos[0],pos[1] = i,j
                 else:
                     self.arr.grid[i][j] = -1
         if n > 0:
@@ -138,7 +136,6 @@ class StoneGrid():
                     k = self.arr.grid[i][j]
                     if k != -1:
                         self.arr.grid[i][j] = k / n
-        return result
     
     def Start(self):       
         global index 
@@ -230,15 +227,14 @@ def ChangePlayer():
         stone_grid.turn_index += 1
         
 def CompStone():
-    pos = [0,0]
     stone_grid.active = False
-    if stone_grid.NextStone(index.stone, pos) == True:
-        if index.stone == black:
-            pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid)
-        elif index.stone == white:
-            pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid) 
-        stone_grid.CanSetStone(index.stone, pre[0], pre[1], True)
-        print(pre)
+    stone_grid.T_data(index.stone)
+    if index.stone == black:
+        pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid)
+    elif index.stone == white:
+        pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid) 
+    stone_grid.CanSetStone(index.stone, pre[0], pre[1], True)
+    print(pre)
     stone_grid.active = True
                  
 player1 = Player()
