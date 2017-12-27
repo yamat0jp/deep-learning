@@ -228,7 +228,7 @@ def ChangePlayer():
         
 def CompStone():
     stone_grid.active = False
-    stone_grid.T_data(index.stone)
+    stone_grid.T_Data(index.stone)
     if index.stone == black:
         pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid)
     elif index.stone == white:
