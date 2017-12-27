@@ -73,6 +73,7 @@ class  Comp():
                 break
         else:
             s = np.argmax(Y)
+        print(X,res,Y)
         hdf5_file ='./gote-model.hdf5'
         self.model2.save_weights(hdf5_file)
         return [s // 8, s % 8]
