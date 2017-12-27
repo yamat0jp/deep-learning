@@ -12,7 +12,7 @@ pygame.font.init()
 comp = Comp()
 screen = pygame.display.set_mode((400,400))
 
-none, black, white = 0,1,2
+none, black, white = 0,-100,200
 
 def Path():
     for name in sys.argv:
@@ -241,7 +241,7 @@ player1 = Player()
 player2 = Player()
 index = player1
 player1.stone = black
-player1.auto = False
+player1.auto = True
 player2.auto = True
 player2.stone = white
 stone_grid = StoneGrid()
