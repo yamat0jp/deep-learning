@@ -14,9 +14,11 @@ class  Comp():
 
         self.model1.add(Dense(50,input_shape=(64,)))
         self.model1.add(Activation('relu'))
+        self.model1.add(Dropout(0.25))
     
         self.model1.add(Dense(100))
         self.model1.add(Activation('relu'))
+        self.model1.add(Dropout(0.25))
     
         self.model1.add(Dense(64))
         self.model1.add(Activation('softmax'))
@@ -27,7 +29,9 @@ class  Comp():
             metrics=['accuracy'])
 
         self.model2.add(Dense(50,input_shape=(64,)))
-        self.model2.add(Activation('relu'))
+        self.model2.add(Activation('sigmoid'))
+        self.model2.add(Dense(100))
+        self.model2.add(Activation('sigmoid'))
         self.model2.add(Dense(64))    
         self.model2.add(Activation('softmax'))
         self.model2.compile(
@@ -50,9 +54,17 @@ class  Comp():
         for i in range(10):
             self.model1.fit(X,Y)
             res = self.model1.predict(X,1)
-            s = np.argmax(res)
-            if Y[0][s] != -1:
-                print('hit!')
+            while True:
+                s = np.argmax(res)
+                if res[0][s] == 0:
+                    s = np.argmax(Y)
+                    print('miss!')
+                elif Y[0][s] == -1:
+                    res[0][s] = 0
+                    print('next')
+                    continue
+                else:
+                    print('hit!')
                 break
         else:
             s = np.argmax(Y)
@@ -67,9 +79,17 @@ class  Comp():
         for i in range(10):
             self.model2.fit(X,Y)
             res = self.model2.predict(X,1)
-            s = np.argmax(res)
-            if Y[0][s] != -1:
-                print('hit!')
+            while True:
+                s = np.argmax(res)
+                if res[0][s] == 0:
+                    s = np.argmax(Y)
+                    print('miss!')
+                elif Y[0][s] != -1:
+                    print('hit!')
+                else:
+                    res[0][s] = 0
+                    print('next')
+                    continue
                 break
         else:
             s = np.argmax(Y)

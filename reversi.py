@@ -122,19 +122,19 @@ class StoneGrid():
         for i in range(8):
             for j in range(8):
                 self.CalScore(stone, i, j)
-                if self.score != -1:
+                if self.score != 0:
                     if x == False:
                         x = True
                     self.arr.grid[i][j] = self.score
                     if self.score > n:
                         n = self.score
                 else:
-                    self.arr.grid[i][j] = -1
+                    self.arr.grid[i][j] = 0
         if n > 0:
             for i in range(8):
                 for j in range(8):
                     k = self.arr.grid[i][j]
-                    if k != -1:
+                    if k != 0:
                         self.arr.grid[i][j] = k / n
     
     def Start(self):       
@@ -242,7 +242,7 @@ player1 = Player()
 player2 = Player()
 index = player1
 player1.stone = black
-player1.auto = False
+player1.auto = True
 player2.auto = True
 player2.stone = white
 stone_grid = StoneGrid()
