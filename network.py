@@ -30,8 +30,10 @@ class  Comp():
 
         self.model2.add(Dense(50,input_shape=(64,)))
         self.model2.add(Activation('sigmoid'))
+        self.model2.add(Dropout(0.25))
         self.model2.add(Dense(100))
         self.model2.add(Activation('sigmoid'))
+        self.model2.add(Dropout(0.25))
         self.model2.add(Dense(64))    
         self.model2.add(Activation('softmax'))
         self.model2.compile(
@@ -56,18 +58,18 @@ class  Comp():
             res = self.model1.predict(X,1)
             while True:
                 s = np.argmax(res)
-                if res[0][s] == 0:
+                if res[0][s] == -1:
                     s = np.argmax(Y)
                     print('miss!')
                 elif Y[0][s] == -1:
-                    res[0][s] = 0
-                    print('next')
+                    res[0][s] = -1
                     continue
                 else:
                     print('hit!')
                 break
         else:
             s = np.argmax(Y)
+        print(Y,res)
         hdf5_file = './sente-model.hdf5'
         self.model1.save_weights(hdf5_file)
         return [s // 8, s % 8]
@@ -81,19 +83,18 @@ class  Comp():
             res = self.model2.predict(X,1)
             while True:
                 s = np.argmax(res)
-                if res[0][s] == 0:
+                if res[0][s] == -1:
                     s = np.argmax(Y)
                     print('miss!')
                 elif Y[0][s] != -1:
                     print('hit!')
                 else:
-                    res[0][s] = 0
-                    print('next')
+                    res[0][s] = -1
                     continue
                 break
         else:
             s = np.argmax(Y)
-        print(X,res,Y)
+        print(Y,res)
         hdf5_file ='./gote-model.hdf5'
         self.model2.save_weights(hdf5_file)
         return [s // 8, s % 8]

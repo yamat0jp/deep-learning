@@ -12,7 +12,7 @@ pygame.font.init()
 comp = Comp()
 screen = pygame.display.set_mode((400,400))
 
-none, black, white = 0,-100,200
+none, black, white = 0,1,2
 
 def Path():
     for name in sys.argv:
@@ -65,14 +65,14 @@ class StoneGrid():
     def CalScore(self,stone,x,y):
         self.buffer.Assign(self.item)
         if self.CanSetStone(stone, x, y, True) == True:
-            self.score = 0
+            self.score = 0.5
             for i in range(8):
                 for j in range(8):
                     if self.CanSetStone(stone, i, j, False) == True:
                         self.score += 1
             self.item.Assign(self.buffer)
         else:
-            self.score = -1
+            self.score = 0
                                            
     def CanSetStone(self,stone,x,y,reverse):
         p = [True,False]        
@@ -118,11 +118,10 @@ class StoneGrid():
     def T_Data(self,stone):
         x = False
         n = 0
-        self.score = 0
         for i in range(8):
             for j in range(8):
                 self.CalScore(stone, i, j)
-                if self.score != 0:
+                if self.score > 0:
                     if x == False:
                         x = True
                     self.arr.grid[i][j] = self.score
@@ -134,8 +133,8 @@ class StoneGrid():
             for i in range(8):
                 for j in range(8):
                     k = self.arr.grid[i][j]
-                    if k != 0:
-                        self.arr.grid[i][j] = k / n
+                    if k > 0:
+                        self.arr.grid[i][j] = (n - k + 0.5) / n
     
     def Start(self):       
         global index 
@@ -242,7 +241,7 @@ player1 = Player()
 player2 = Player()
 index = player1
 player1.stone = black
-player1.auto = True
+player1.auto = False
 player2.auto = True
 player2.stone = white
 stone_grid = StoneGrid()
