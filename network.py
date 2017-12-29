@@ -53,11 +53,9 @@ class  Comp():
             res = self.model1.predict(X,1)
             while True:
                 s = np.argmax(res)
-                if res[0][s] == -1:
-                    s = np.argmax(Y)
-                    print('miss!')
-                elif Y[0][s] == -1:
+                if Y[0][s] == -1:
                     res[0][s] = -1
+                    print('miss')
                     continue
                 else:
                     print('hit!')
@@ -80,14 +78,12 @@ class  Comp():
             res = self.model2.predict(X,1)
             while True:
                 s = np.argmax(res)
-                if res[0][s] == -1:
-                    s = np.argmax(Y)
-                    print('miss!')
-                elif Y[0][s] != -1:
-                    print('hit!')
-                else:
+                if Y[0][s] == -1:
                     res[0][s] = -1
+                    print('miss')
                     continue
+                else:
+                    print('hit!')
                 break
         else:
             s = np.argmax(Y)
