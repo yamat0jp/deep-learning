@@ -41,15 +41,10 @@ class  Comp():
             optimizer='adam',
             metrics=['accuracy'])
         
-        
-        s = 'sente-model.hdf5'
-        if os.path.exists(s):
-            self.model1.load_weights(s)
-        s = 'gote-model.hdf5'
-        if os.path.exists(s):
-            self.model2.load_weights(s)
-        
     def sente_stone(self,X_train,Y_train):
+        hdf5_file = 'sente-model.hdf5'
+        if os.path.exists(hdf5_file):
+            self.model1.load_weights(hdf5_file)
         X,Y = np.array(X_train),np.array(Y_train) 
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
@@ -70,11 +65,13 @@ class  Comp():
         else:
             s = np.argmax(Y)
         print(Y,res)
-        hdf5_file = './sente-model.hdf5'
         self.model1.save_weights(hdf5_file)
         return [s // 8, s % 8]
         
     def gote_stone(self,X_train,Y_train):
+        hdf5_file = 'gote-model.hdf5'
+        if os.path.exists(hdf5_file):
+            self.model2.load_weights(hdf5_file) 
         X,Y=np.array(X_train),np.array(Y_train)
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
