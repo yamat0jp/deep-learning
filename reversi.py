@@ -237,41 +237,42 @@ def CompStone():
     print(pre)
     stone_grid.active = True
                  
-player1 = Player()
-player2 = Player()
-index = player1
-player1.stone = black
-player1.auto = True
-player2.auto = True
-player2.stone = white
-stone_grid = StoneGrid()
-stone_grid.Start()
-pygame.event.get()
-temp = pygame.time.get_ticks()
-Paint()
-tt = (player1.auto == True)and(player2.auto == True)
-if tt == True:
-    k = 10
-else:
-    k = 150
-while True:    
-    if (pygame.time.get_ticks()-temp > 2*k)and(stone_grid.gameover == False):
-        if (stone_grid.active == True)and(index.auto == True):        
-            CompStone()            
-            ChangePlayer()                 
-        temp = pygame.time.get_ticks()
-    pygame.time.wait(k)
-    for x in pygame.event.get():
-        if x.type == QUIT:
-            sys.exit()
-    t = pygame.mouse.get_pressed()[0]
-    if (stone_grid.gameover == True)and((t == True)or(tt == True)):
-        stone_grid.Start()
-    if (index.auto == False)and(stone_grid.active == True)and(t == True):            
-        stone_grid.active = False
-        s = pygame.mouse.get_pos()
-        if stone_grid.CanSetStone(index.stone,s[0]//size,s[1]//size,True) == True:
-            stone_grid.turn_index += 1            
-            ChangePlayer() 
-        stone_grid.active = True        
+if __name__ == '__main__':
+    player1 = Player()
+    player2 = Player()
+    index = player1
+    player1.stone = black
+    player1.auto = True
+    player2.auto = True
+    player2.stone = white
+    stone_grid = StoneGrid()
+    stone_grid.Start()
+    pygame.event.get()
+    temp = pygame.time.get_ticks()
+    Paint()
+    tt = (player1.auto == True)and(player2.auto == True)
+    if tt == True:
+        k = 10
+    else:
+        k = 150
+    while True:    
+        if (pygame.time.get_ticks()-temp > 2*k)and(stone_grid.gameover == False):
+            if (stone_grid.active == True)and(index.auto == True):        
+                CompStone()            
+                ChangePlayer()                 
+            temp = pygame.time.get_ticks()
+        pygame.time.wait(k)
+        for x in pygame.event.get():
+            if x.type == QUIT:
+                sys.exit()
+        t = pygame.mouse.get_pressed()[0]
+        if (stone_grid.gameover == True)and((t == True)or(tt == True)):
+            stone_grid.Start()
+        if (index.auto == False)and(stone_grid.active == True)and(t == True):            
+            stone_grid.active = False
+            s = pygame.mouse.get_pos()
+            if stone_grid.CanSetStone(index.stone,s[0]//size,s[1]//size,True) == True:
+                stone_grid.turn_index += 1            
+                ChangePlayer() 
+            stone_grid.active = True        
         
