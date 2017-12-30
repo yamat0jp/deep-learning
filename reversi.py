@@ -234,7 +234,6 @@ def CompStone():
     elif index.stone == white:
         pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid) 
     stone_grid.CanSetStone(index.stone, pre[0], pre[1], True)
-    print(pre)
     stone_grid.active = True
                  
 if __name__ == '__main__':

@@ -49,7 +49,7 @@ class  Comp():
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
         self.model1.fit(X,Y)
-        res = self.model1.predict(X,1)
+        res = self.model1.predict(X,1,0)
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
