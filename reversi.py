@@ -7,26 +7,17 @@ import pygame,os,sys
 from pygame.locals import *
 from network import Comp
 
-
-pygame.font.init()
-comp = Comp()
-screen = pygame.display.set_mode((400,400))
-
 none, black, white = 0,1,2
+
+index_x = 6
+index_y = 5
+size = 50
 
 def Path():
     for name in sys.argv:
         if os.path.exists(name) == True:
             return os.path.dirname(name)
-       
-img = pygame.image.load(os.path.join(Path(),'png','tips.png')).convert()
-bkblack = pygame.image.load(os.path.join(Path(),'png','min_black.png')).convert()
-bkwhite = pygame.image.load(os.path.join(Path(),'png','min_white.png')).convert()
-
-index_x = 6
-index_y = 5
-size = 50
-   
+ 
 class Player():
     auto = False
     stone = none
@@ -237,6 +228,14 @@ def CompStone():
     stone_grid.active = True
                  
 if __name__ == '__main__':
+    pygame.font.init()
+    comp = Comp()
+    screen = pygame.display.set_mode((400,400))
+       
+    img = pygame.image.load(os.path.join(Path(),'png','tips.png')).convert()
+    bkblack = pygame.image.load(os.path.join(Path(),'png','min_black.png')).convert()
+    bkwhite = pygame.image.load(os.path.join(Path(),'png','min_white.png')).convert()
+
     player1 = Player()
     player2 = Player()
     index = player1
