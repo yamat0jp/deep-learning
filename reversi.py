@@ -263,7 +263,7 @@ while True:
     pygame.time.wait(k)
     for x in pygame.event.get():
         if x.type == QUIT:
-            sys.exit()    
+            sys.exit()
     t = pygame.mouse.get_pressed()[0]
     if (stone_grid.gameover == True)and((t == True)or(tt == True)):
         stone_grid.Start()

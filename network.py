@@ -48,21 +48,16 @@ class  Comp():
         X,Y = np.array(X_train),np.array(Y_train) 
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
-        for i in range(10):
-            self.model1.fit(X,Y)
+        self.model1.fit(X,Y)
         res = self.model1.predict(X,1)
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
                 s = np.argmax(Y)
-                print('miss')
             elif Y[0][s] == 0:
                 res[0][s] = 0
                 continue
-            else:
-                print('hit!')
             break
-        print(Y,res)
         self.model1.save_weights(hdf5_file)
         return [s // 8, s % 8]
         
@@ -73,21 +68,15 @@ class  Comp():
         X,Y=np.array(X_train),np.array(Y_train)
         X = np.reshape(X,[1,64])
         Y = np.reshape(Y,[1,64])
-        for i in range(10):
-            self.model2.fit(X,Y)
+        self.model2.fit(X,Y)
         res = self.model2.predict(X,1)
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
                 s = np.argmax(Y)
-                print('miss')
             elif Y[0][s] == 0:
                 res[0][s] = 0
                 continue
-            else:
-                print('hit!')
             break
-        print(Y,res)
-        hdf5_file ='./gote-model.hdf5'
         self.model2.save_weights(hdf5_file)
         return [s // 8, s % 8]
