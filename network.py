@@ -46,8 +46,8 @@ class  Comp():
         if os.path.exists(hdf5_file):
             self.model1.load_weights(hdf5_file)
         X,Y = np.array(X_train),np.array(Y_train) 
-        X = np.reshape(X,[1,64])
-        Y = np.reshape(Y,[1,64])
+        X = np.reshape(np.float32(X),[1,64])
+        Y = np.reshape(np.float32(Y),[1,64])
         self.model1.fit(X,Y)
         res = self.model1.predict(X,1,0)
         while True:
@@ -66,8 +66,8 @@ class  Comp():
         if os.path.exists(hdf5_file):
             self.model2.load_weights(hdf5_file) 
         X,Y=np.array(X_train),np.array(Y_train)
-        X = np.reshape(X,[1,64])
-        Y = np.reshape(Y,[1,64])
+        X = np.reshape(np.float32(X),[1,64])
+        Y = np.reshape(np.float32(Y),[1,64])
         self.model2.fit(X,Y)
         res = self.model2.predict(X,1)
         while True:
