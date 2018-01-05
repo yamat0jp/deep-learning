@@ -9,8 +9,6 @@ from network import Comp
 
 none, black, white = 0,1,2
 
-index_x = 6
-index_y = 5
 size = 50
 
 def Path():
@@ -51,7 +49,6 @@ class StoneGrid():
         self.item.grid[4][3] = white 
         self.item.grid[3][4] = white 
         self.turn_index = 0
-        self.turn_number = 0
         
     def CalScore(self,stone,x,y):
         self.buffer.Assign(self.item)
@@ -134,15 +131,7 @@ class StoneGrid():
         self.active = True
         self.gameover = False
         Paint()
-        
-    def ReStart(self):
-        self.active = True
-        self.gameover = False
-        self.turn_index = self.turn_number
-        
-    def Pause(self):
-        self.active = False
-               
+                       
     def Paint(self):
         if self.effect_stone == black:
             s = bkwhite           
@@ -245,7 +234,6 @@ if __name__ == '__main__':
     player2.stone = white
     stone_grid = StoneGrid()
     stone_grid.Start()
-    pygame.event.get()
     temp = pygame.time.get_ticks()
     Paint()
     tt = (player1.auto == True)and(player2.auto == True)
