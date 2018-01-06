@@ -15,12 +15,11 @@ class  Comp():
         
         self.hyouka = Sequential()
 
-        self.hyouka.add(InputLayer(input_shape=(8,8,1)))
+        self.hyouka.add(InputLayer(input_shape=(8,8,60)))
         self.hyouka.add(Conv2D(1,(4,4)))
         self.hyouka.add(Activation('relu'))
-        self.hyouka.add(MaxPooling2D(pool_size=(2,2)))
         
-        self.hyouka.add(LSTM(1,input_shape=(None,1,1,60)))    
+        self.hyouka.add(LSTM(60,input_shape=(None,5,5,60)))    
     
         self.hyouka.compile(
             loss='categorical_crossentropy',
@@ -66,7 +65,7 @@ class  Comp():
         if os.path.exists(filename):
             self.hyouka.load_weights(filename)
         X,Y = np.array(X_train),np.array(Y_train)
-        X = np.reshape(np.float32(X),(-1,8,8,1))
+        X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
         if train:
             self.model1.fit(X,Y)
