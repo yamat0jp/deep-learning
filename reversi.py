@@ -115,14 +115,11 @@ class StoneGrid():
         return p[1]
                             
     def T_Data(self,stone):
-        x = False
         n = 0
         for i in range(8):
             for j in range(8):
                 self.CalScore(stone, i, j)
                 if self.score > 0:
-                    if x == False:
-                        x = True
                     self.arr.grid[i][j] = self.score
                     if self.score > n:
                         n = self.score
@@ -132,7 +129,7 @@ class StoneGrid():
             for i in range(8):
                 for j in range(8):
                     k = self.arr.grid[i][j]
-                    if k > 0:
+                    if k != 0:
                         self.arr.grid[i][j] = (n - k + 0.5) / n
     
     def Start(self):       
@@ -228,7 +225,7 @@ def CompStone():
     stone_grid.CanSetStone(index.stone, pre[0], pre[1], True)
     stone_grid.active = True
 
-if __name__ == '__main()__':
+if __name__ == '__main__':
     player1 = Player()
     player2 = Player()
     index = player1
