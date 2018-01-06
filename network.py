@@ -4,22 +4,27 @@ Created on 2017/12/25
 @author: fukemasashi
 '''
 from keras.models import Sequential
-from keras.layers import Dense,Dropout,Activation
+from keras.layers import Dense,Dropout,Activation,Flatten
 from keras.layers import InputLayer,Conv2D,LSTM,MaxPooling2D
 import numpy as np
 import os
 
 class  Comp():
     def __init__(self):
+        self.filename = 'sente-hyouka.hdf5'
+        
         self.model1,self.model2 = self.model(),self.model()
         
         self.hyouka = Sequential()
 
         self.hyouka.add(InputLayer(input_shape=(8,8,60)))
-        self.hyouka.add(Conv2D(1,(4,4)))
+        self.hyouka.add(Conv2D(10,(4,4)))
         self.hyouka.add(Activation('relu'))
-        
-        self.hyouka.add(LSTM(60,input_shape=(None,5,5,60)))    
+        self.hyouka.add(MaxPooling2D(pool_size=(5,5)))
+        self.hyouka.add(Flatten())
+                
+        self.hyouka.add(LSTM(64,input_dim=60))    
+        self.hyouka.add(Activation('softmax'))
     
         self.hyouka.compile(
             loss='categorical_crossentropy',
@@ -44,8 +49,11 @@ class  Comp():
     
     def hyouka(self,X,Y):
         X,Y = np.array(X),np.array(Y)
-        X = np.reshape(np.float32(X),(-1,8,8,60))        
+        X = np.reshape(np.float32(X),(-1,8,8,60))  
+        if os.path.exists:
+            self.hyouka.loac_weights(self.filename)
         self.hyouka.fit(X,Y)
+        self.hyouka.save_weights(self.filename)
         
     def calscore(self,result,X):
         for x in range(len(result)):
@@ -59,11 +67,10 @@ class  Comp():
     
     def sente_stone(self,X_train,Y_train,train):
         hdf5_file = 'sente-model.hdf5'
-        filename = 'sente-hyouka.hdf5'
         if os.path.exists(hdf5_file):
             self.model1.load_weights(hdf5_file)
-        if os.path.exists(filename):
-            self.hyouka.load_weights(filename)
+        if os.path.exists(self.filename):
+            self.hyouka.load_weights(self.filename)
         X,Y = np.array(X_train),np.array(Y_train)
         X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
