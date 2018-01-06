@@ -4,57 +4,75 @@ Created on 2017/12/25
 @author: fukemasashi
 '''
 from keras.models import Sequential
-from keras.layers import Dense,Dropout,Activation,InputLayer,Conv2D,Flatten
+from keras.layers import Dense,Dropout,Activation
+from keras.layers import InputLayer,Conv2D,LSTM,MaxPooling2D
 import numpy as np
 import os
 
 class  Comp():
     def __init__(self):
-        self.model1,self.model2 = Sequential(),Sequential()
-
-        self.model1.add(InputLayer(input_shape=(8,8,1)))
-        self.model1.add(Conv2D(1,(4,4)))
-        self.model1.add(Activation('relu'))
-        self.model1.add(Flatten())
+        self.model1,self.model2 = self.model(),self.model()
         
-        self.model1.add(Dense(50))
-        self.model1.add(Activation('relu'))
-        self.model1.add(Dropout(0.25))
+        self.hyouka = Sequential()
+
+        self.hyouka.add(InputLayer(input_shape=(8,8,1)))
+        self.hyouka.add(Conv2D(1,(4,4)))
+        self.hyouka.add(Activation('relu'))
+        self.hyouka.add(MaxPooling2D(pool_size=(2,2)))
+        
+        self.hyouka.add(LSTM(1,input_shape=(None,1,1,60)))    
     
-        self.model1.add(Dense(100))
-        self.model1.add(Activation('relu'))
-        self.model1.add(Dropout(0.25))
-    
-        self.model1.add(Dense(64))
-        self.model1.add(Activation('softmax'))
-    
-        self.model1.compile(
+        self.hyouka.compile(
             loss='categorical_crossentropy',
             optimizer='adam',
             metrics=['accuracy'])
 
-        self.model2.add(Dense(100,input_shape=(64,)))
-        self.model2.add(Activation('sigmoid'))
-        self.model2.add(Dropout(0.25))
-        self.model2.add(Dense(100))
-        self.model2.add(Activation('sigmoid'))
-        self.model2.add(Dropout(0.25))
-        self.model2.add(Dense(64))    
-        self.model2.add(Activation('softmax'))
-        self.model2.compile(
+    def model(self):
+        model = Sequential()
+        model.add(Dense(100,input_shape=(64,)))
+        model.add(Activation('sigmoid'))
+        model.add(Dropout(0.25))
+        model.add(Dense(100))
+        model.add(Activation('sigmoid'))
+        model.add(Dropout(0.25))
+        model.add(Dense(64))    
+        model.add(Activation('softmax'))
+        model.compile(
             loss='categorical_crossentropy',
             optimizer='adam',
             metrics=['accuracy'])
+        return model
+    
+    def hyouka(self,X,Y):
+        X,Y = np.array(X),np.array(Y)
+        X = np.reshape(np.float32(X),(-1,8,8,60))        
+        self.hyouka.fit(X,Y)
         
-    def sente_stone(self,X_train,Y_train):
+    def calscore(self,result,X):
+        for x in range(len(result)):
+            i,j = x//8,x%8
+            if result[x] != 0:
+                X[i][j] = 1
+                yield self.hyouka.predict(X)
+                X[i][j] = 0
+            else:
+                yield 0
+    
+    def sente_stone(self,X_train,Y_train,train):
         hdf5_file = 'sente-model.hdf5'
+        filename = 'sente-hyouka.hdf5'
         if os.path.exists(hdf5_file):
             self.model1.load_weights(hdf5_file)
+        if os.path.exists(filename):
+            self.hyouka.load_weights(filename)
         X,Y = np.array(X_train),np.array(Y_train)
         X = np.reshape(np.float32(X),(-1,8,8,1))
         Y = np.reshape(np.float32(Y),(1,64))
-        self.model1.fit(X,Y)
-        res = self.model1.predict(X,1,0)
+        if train:
+            self.model1.fit(X,Y)
+        res = self.model1.predict(X)
+        scores = self.calscore(res[0],X_train)
+        res = (res + np.array(np.float32(scores)) ) / 2
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
@@ -63,18 +81,20 @@ class  Comp():
                 res[0][s] = 0
                 continue
             break
-        self.model1.save_weights(hdf5_file)
+        if train:
+            self.model1.save_weights(hdf5_file)
         return [s // 8, s % 8]
         
-    def gote_stone(self,X_train,Y_train):
+    def gote_stone(self,X_train,Y_train,train):
         hdf5_file = 'gote-model.hdf5'
         if os.path.exists(hdf5_file):
             self.model2.load_weights(hdf5_file) 
         X,Y = np.array(X_train),np.array(Y_train)
         X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
-        self.model2.fit(X,Y)
-        res = self.model2.predict(X,1)
+        if train:
+            self.model2.fit(X,Y)
+        res = self.model2.predict(X)
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
