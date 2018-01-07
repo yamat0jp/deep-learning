@@ -33,7 +33,6 @@ class Grid():
 class StoneGrid():
     def __init__(self):    
         self.item = Grid()
-        self.old = [Grid() for x in range(60)]
         self.buffer = Grid()
         self.arr = Grid()
         self.turn_index = 0
@@ -180,7 +179,6 @@ def ChangePlayer():
     
     def finalize():
         pygame.display.set_caption(s)
-        stone_grid.old[stone_grid.turn_index].Assign(stone_grid.item)
         stone_grid.turn_index += 1
         
     s = Main()+str(stone_grid.turn_index+1)

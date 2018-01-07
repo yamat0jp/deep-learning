@@ -18,11 +18,11 @@ class  Comp():
         
         self.hyouka = Sequential()
 
-        self.hyouka.add(InputLayer(input_shape=(8,8,1)))
-        self.hyouka.add(Conv2D(3,(4,4)))
+        self.hyouka.add(InputLayer(input_shape=(8,8,5)))
+        self.hyouka.add(Conv2D(5,(4,4)))
         self.hyouka.add(Activation('relu'))
         
-        self.hyouka.add(Conv2D(3,(4,4)))
+        self.hyouka.add(Conv2D(5,(4,4)))
         self.hyouka.add(Activation('relu'))
         
         #self.hyouka.add(MaxPooling2D(pool_size=(2,2)))            
@@ -37,6 +37,8 @@ class  Comp():
             loss='binary_crossentropy',
             optimizer='adam',
             metrics=['accuracy'])
+        
+        self.past = []
 
     def model(self):
         model = Sequential()
@@ -54,21 +56,45 @@ class  Comp():
             metrics=['accuracy'])
         return model
     
-    def gakushu(self,X,Y):
-        X,Y = np.array(X),np.array(Y)
-        X = np.reshape(np.float32(X),(-1,8,8,1))
+    def gakushu(self,Y):
+        if len(self.past) < 5:
+            return
+        temp = self.past[len(self.past)-1]
+        s = True
+        k = 0
+        for i in range(8):
+            for j in range(8):
+                if temp[i][j] == 0:
+                    s = False
+                    break
+                elif temp[i][j] == 1:
+                    k += 1
+                        
+            if s == False:
+                break
+        if (s == True)and(k > 32):
+            Y *= 2
+        X,Y = np.array(self.past),np.array(Y)
+        X = np.reshape(np.float32(self.past),(-1,8,8,5))
         Y = np.reshape(Y,(1,1))
         self.hyouka.fit(X,Y)
         
     def calscore(self,result,X):
+        if len(self.past) < 5:
+            return None
         X = np.float32(np.reshape(np.array(X),(1,64)))
         s = []
         for x in range(len(result)):
             if result[x] != 0:
                 X[0][x] = 1
-                Y = np.reshape(X,(-1,8,8,1))
-                s.append(self.hyouka.predict(Y))
+                if len(self.past) == 5:
+                    temp = self.past[0]
+                    self.past.pop(0)
+                self.past.append(np.reshape(X,(8,8)))
+                s.append(self.hyouka.predict(np.reshape(np.float32(self.past),(-1,8,8,5))))
                 X[0][x] = 0
+                self.past.pop(len(self.past)-1)
+                self.past.insert(0,temp)
             else:
                 s.append(0)
         return s
@@ -79,16 +105,20 @@ class  Comp():
             self.model1.load_weights(hdf5_file)
         if os.path.exists(self.filename):
             self.hyouka.load_weights(self.filename)
-        X,Y = np.array(X_train),np.array(Y_train)        
+        X,Y = np.array(X_train),np.array(Y_train)
+        if len(self.past) == 5:
+            self.past.pop(0)
+        self.past.append(X)        
         X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
         self.model1.fit(X,Y)
         res = self.model1.predict(X)
         self.model1.save_weights(hdf5_file)
-        self.gakushu(X_train,Z)
+        self.gakushu(Z)
         scores = self.calscore(res[0],X_train)  
         self.hyouka.save_weights(self.filename)
-        res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
+        if scores != None:
+            res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
