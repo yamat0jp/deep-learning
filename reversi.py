@@ -223,15 +223,14 @@ def hyouka():
             i += 2
         elif y == white:
             i -= 2
-    stone_grid.buffer.Assign(stone_grid.item)
-    stone_grid.item.Assign(x)
     corner = [(0,0),(0,7),(7,0),(7,7)]
     for y in corner:
         if stone_grid.CanSetStone(black,y[0],y[1],False) == True:
             i += 1
+            stone_grid.item.grid[y[0]][y[1]] = none
         elif stone_grid.CanSetStone(white,y[0],y[1],False) == True:
             i -= 1
-    stone_grid.item.Assign(stone_grid.buffer)
+            stone_grid.item.grid[y[0]][y[1]] = none
     return i
     
         

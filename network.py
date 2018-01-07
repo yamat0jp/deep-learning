@@ -19,14 +19,18 @@ class  Comp():
         self.hyouka = Sequential()
 
         self.hyouka.add(InputLayer(input_shape=(8,8,1)))
-        self.hyouka.add(Conv2D(1,(4,4)))
+        self.hyouka.add(Conv2D(3,(4,4)))
         self.hyouka.add(Activation('relu'))
         
-        self.hyouka.add(Conv2D(1,(4,4)))
+        self.hyouka.add(Conv2D(3,(4,4)))
         self.hyouka.add(Activation('relu'))
         
-        self.hyouka.add(MaxPooling2D(pool_size=(2,2)))            
+        #self.hyouka.add(MaxPooling2D(pool_size=(2,2)))            
         #self.hyouka.add(GRU(60,input_shape=(60,60))) 
+        self.hyouka.add(Flatten())
+        self.hyouka.add(Dense(10))
+        self.hyouka.add(Activation('relu'))
+        self.hyouka.add(Dense(1))
         self.hyouka.add(Activation('softmax'))
     
         self.hyouka.compile(
@@ -53,7 +57,7 @@ class  Comp():
     def gakushu(self,X,Y):
         X,Y = np.array(X),np.array(Y)
         X = np.reshape(np.float32(X),(-1,8,8,1))
-        Y = np.reshape(Y,(-1,1,1,1))
+        Y = np.reshape(Y,(1,1))
         self.hyouka.fit(X,Y)
         
     def calscore(self,result,X):
