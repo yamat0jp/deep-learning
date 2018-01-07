@@ -20,10 +20,14 @@ class  Comp():
         self.hyouka.add(InputLayer(input_shape=(8,8,60)))
         self.hyouka.add(Conv2D(10,(4,4)))
         self.hyouka.add(Activation('relu'))
-        self.hyouka.add(MaxPooling2D(pool_size=(5,5)))
+        
+        self.hyouka.add(Conv2D(10,(4,4)))
+        self.hyouka.add(Activation('relu'))
+        
+        self.hyouka.add(MaxPooling2D(pool_size=(2,2)))
         self.hyouka.add(Flatten())
                 
-        self.hyouka.add(LSTM(64,input_dim=60))    
+        self.hyouka.add(LSTM(60))    
         self.hyouka.add(Activation('softmax'))
     
         self.hyouka.compile(
@@ -51,7 +55,7 @@ class  Comp():
         X,Y = np.array(X),np.array(Y)
         X = np.reshape(np.float32(X),(-1,8,8,60))  
         if os.path.exists:
-            self.hyouka.loac_weights(self.filename)
+            self.hyouka.load_weights(self.filename)
         self.hyouka.fit(X,Y)
         self.hyouka.save_weights(self.filename)
         
