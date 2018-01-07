@@ -66,7 +66,7 @@ class  Comp():
             i,j = x//8,x%8
             if result[x] != 0:
                 X[i][j] = 1
-                s[x] = self.hyouka.predict(np.array(X))
+                s[x] = self.hyouka.predict(np.array(X))#8,8
                 X[i][j] = 0
             else:
                 s[x] = 0
