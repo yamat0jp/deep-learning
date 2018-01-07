@@ -213,36 +213,35 @@ def ChangePlayer():
 
 def GameOver():
     stone_grid.gameover = True
-    stone_grid.score = []
-    for x in stone_grid.old:
-        i = 0
-        corner = [x[0][0],x[0][7],x[7][0],x[7][7]]
-        for y in corner:
-            if y == black:
-                i += 2
-            elif y == white:
-                i -= 2
-        stone_grid.buffer.assign(stone_grid.item)
-        stone_grid.item.assign(x)
-        corner = [(0,0),(0,7),(7,0),(7,7)]
-        for y in corner:
-            if stone_grid.CanSetStone(black,y[0],y[1],False) == True:
-                i += 1
-            elif stone_grid.CanSetStone(white,y[0],y[1],False) == True:
-                i -= 1
-        stone_grid.score.append(i)
-        stone_grid.item.assign(stone_grid.buffer)
-    old = [x.grid for x in stone_grid.old]
-    comp.hyouka(old,stone_grid.score)
+    
+def hyouka():
+    i = 0
+    x = stone_grid.item
+    corner = [x.grid[0][0],x.grid[0][7],x.grid[7][0],x.grid[7][7]]
+    for y in corner:
+        if y == black:
+            i += 2
+        elif y == white:
+            i -= 2
+    stone_grid.buffer.Assign(stone_grid.item)
+    stone_grid.item.Assign(x)
+    corner = [(0,0),(0,7),(7,0),(7,7)]
+    for y in corner:
+        if stone_grid.CanSetStone(black,y[0],y[1],False) == True:
+            i += 1
+        elif stone_grid.CanSetStone(white,y[0],y[1],False) == True:
+            i -= 1
+    stone_grid.item.Assign(stone_grid.buffer)
+    return i
     
         
 def CompStone():
     stone_grid.active = False
     stone_grid.T_Data(index.stone)
     if index.stone == black:
-        pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid,tt)
+        pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid,hyouka())
     elif index.stone == white:
-        pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid,tt) 
+        pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid) 
     stone_grid.CanSetStone(index.stone, pre[0], pre[1], True)
     stone_grid.active = True
                  

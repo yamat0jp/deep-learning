@@ -18,21 +18,19 @@ class  Comp():
         
         self.hyouka = Sequential()
 
-        self.hyouka.add(InputLayer(input_shape=(8,8,60)))
-        self.hyouka.add(Conv2D(10,(4,4)))
+        self.hyouka.add(InputLayer(input_shape=(8,8,1)))
+        self.hyouka.add(Conv2D(1,(4,4)))
         self.hyouka.add(Activation('relu'))
         
-        self.hyouka.add(Conv2D(10,(4,4)))
+        self.hyouka.add(Conv2D(1,(4,4)))
         self.hyouka.add(Activation('relu'))
         
-        self.hyouka.add(MaxPooling2D(pool_size=(2,2)))
-        self.hyouka.add(Flatten())
-            
+        self.hyouka.add(MaxPooling2D(pool_size=(2,2)))            
         #self.hyouka.add(GRU(60,input_shape=(60,60))) 
         self.hyouka.add(Activation('softmax'))
     
         self.hyouka.compile(
-            loss='categorical_crossentropy',
+            loss='binary_crossentropy',
             optimizer='adam',
             metrics=['accuracy'])
 
@@ -52,40 +50,41 @@ class  Comp():
             metrics=['accuracy'])
         return model
     
-    def hyouka(self,X,Y):
+    def gakushu(self,X,Y):
         X,Y = np.array(X),np.array(Y)
-        X = np.reshape(np.float32(X),(-1,8,8,60))  
-        if os.path.exists:
+        X = np.reshape(np.float32(X),(-1,8,8,1))
+        Y = np.reshape(Y,(-1,1,1,1))
+        if os.path.exists(self.filename):
             self.hyouka.load_weights(self.filename)
         self.hyouka.fit(X,Y)
         self.hyouka.save_weights(self.filename)
         
     def calscore(self,result,X):
-        s = [0 for x in range(len(result))]
+        X = np.float32(np.reshape(np.array(X),(1,64)))
+        s = []
         for x in range(len(result)):
-            i,j = x//8,x%8
             if result[x] != 0:
-                X[i][j] = 1
-                s[x] = self.hyouka.predict(np.array(X))#8,8
-                X[i][j] = 0
+                X[0][x] = 1
+                Y = np.reshape(X,(-1,8,8,1))
+                s.append(self.hyouka.predict(Y))
+                X[0][x] = 0
             else:
-                s[x] = 0
+                s.append(0)
         return s
     
-    def sente_stone(self,X_train,Y_train,train):
+    def sente_stone(self,X_train,Y_train,Z):
         hdf5_file = 'sente-model.hdf5'
         if os.path.exists(hdf5_file):
             self.model1.load_weights(hdf5_file)
-        if os.path.exists(self.filename):
-            self.hyouka.load_weights(self.filename)
         X,Y = np.array(X_train),np.array(Y_train)        
         X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
-        if train:
-            self.model1.fit(X,Y)
+        self.model1.fit(X,Y)
         res = self.model1.predict(X)
+        self.model1.save_weights(hdf5_file)
+        self.gakushu(X_train,Z)
         scores = self.calscore(res[0],X_train)  
-        res = (res + np.array(scores) ) / 2
+        res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
@@ -94,20 +93,18 @@ class  Comp():
                 res[0][s] = 0
                 continue
             break
-        if train:
-            self.model1.save_weights(hdf5_file)
         return [s // 8, s % 8]
         
-    def gote_stone(self,X_train,Y_train,train):
+    def gote_stone(self,X_train,Y_train):
         hdf5_file = 'gote-model.hdf5'
         if os.path.exists(hdf5_file):
             self.model2.load_weights(hdf5_file) 
         X,Y = np.array(X_train),np.array(Y_train)
         X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
-        if train:
-            self.model2.fit(X,Y)
+        self.model2.fit(X,Y)
         res = self.model2.predict(X)
+        self.model2.save_weights(hdf5_file)
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
@@ -116,5 +113,4 @@ class  Comp():
                 res[0][s] = 0
                 continue
             break
-        self.model2.save_weights(hdf5_file)
         return [s // 8, s % 8]
