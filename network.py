@@ -24,10 +24,8 @@ class  Comp():
         
         self.hyouka.add(Conv2D(5,(4,4)))
         self.hyouka.add(Activation('relu'))
-        
-        #self.hyouka.add(MaxPooling2D(pool_size=(2,2)))            
-        #self.hyouka.add(GRU(60,input_shape=(60,60))) 
         self.hyouka.add(Flatten())
+        
         self.hyouka.add(Dense(10))
         self.hyouka.add(Activation('relu'))
         self.hyouka.add(Dense(1))
@@ -73,7 +71,7 @@ class  Comp():
             if s == False:
                 break
         if (s == True)and(k > 32):
-            Y *= 2
+            Y += 10
         X,Y = np.array(self.past),np.array(Y)
         X = np.reshape(np.float32(self.past),(-1,8,8,5))
         Y = np.reshape(Y,(1,1))
