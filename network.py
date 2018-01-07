@@ -4,7 +4,7 @@ Created on 2017/12/25
 @author: fukemasashi
 '''
 from keras.models import Sequential
-from keras.layers import Dense,Dropout,Activation,Flatten
+from keras.layers import Dense,Dropout,Activation,Flatten,Reshape
 from keras.layers import InputLayer,Conv2D,LSTM,MaxPooling2D
 import numpy as np
 import os
@@ -26,7 +26,8 @@ class  Comp():
         
         self.hyouka.add(MaxPooling2D(pool_size=(2,2)))
         self.hyouka.add(Flatten())
-                
+                     
+        self.hyouka.add(Reshape((1,60)))
         self.hyouka.add(LSTM(60))    
         self.hyouka.add(Activation('softmax'))
     
