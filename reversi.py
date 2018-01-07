@@ -180,7 +180,7 @@ def ChangePlayer():
     
     def finalize():
         pygame.display.set_caption(s)
-        stone_grid.old[stone_grid.turn_index].assign(stone_grid.item)
+        stone_grid.old[stone_grid.turn_index].Assign(stone_grid.item)
         stone_grid.turn_index += 1
         
     s = Main()+str(stone_grid.turn_index+1)
@@ -232,16 +232,17 @@ def GameOver():
                 i -= 1
         stone_grid.score.append(i)
         stone_grid.item.assign(stone_grid.buffer)
-    comp.hyouka(stone_grid.old,stone_grid.score)
+    old = [x.grid for x in stone_grid.old]
+    comp.hyouka(old,stone_grid.score)
     
         
 def CompStone():
     stone_grid.active = False
     stone_grid.T_Data(index.stone)
     if index.stone == black:
-        pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid)
+        pre = comp.sente_stone(stone_grid.item.grid,stone_grid.arr.grid,tt)
     elif index.stone == white:
-        pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid) 
+        pre = comp.gote_stone(stone_grid.item.grid,stone_grid.arr.grid,tt) 
     stone_grid.CanSetStone(index.stone, pre[0], pre[1], True)
     stone_grid.active = True
                  

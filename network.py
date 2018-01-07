@@ -5,7 +5,8 @@ Created on 2017/12/25
 '''
 from keras.models import Sequential
 from keras.layers import Dense,Dropout,Activation,Flatten,Reshape
-from keras.layers import InputLayer,Conv2D,LSTM,MaxPooling2D
+from keras.layers import InputLayer,Conv2D,LSTM,MaxPooling2D,GRU
+from keras.layers.embeddings import Embedding
 import numpy as np
 import os
 
@@ -26,9 +27,8 @@ class  Comp():
         
         self.hyouka.add(MaxPooling2D(pool_size=(2,2)))
         self.hyouka.add(Flatten())
-                     
-        self.hyouka.add(Reshape((1,60)))
-        self.hyouka.add(LSTM(60))    
+            
+        #self.hyouka.add(GRU(60,input_shape=(60,60))) 
         self.hyouka.add(Activation('softmax'))
     
         self.hyouka.compile(
@@ -61,14 +61,16 @@ class  Comp():
         self.hyouka.save_weights(self.filename)
         
     def calscore(self,result,X):
+        s = [0 for x in range(len(result))]
         for x in range(len(result)):
             i,j = x//8,x%8
             if result[x] != 0:
                 X[i][j] = 1
-                yield self.hyouka.predict(X)
+                s[x] = self.hyouka.predict(np.array(X))
                 X[i][j] = 0
             else:
-                yield 0
+                s[x] = 0
+        return s
     
     def sente_stone(self,X_train,Y_train,train):
         hdf5_file = 'sente-model.hdf5'
@@ -76,14 +78,14 @@ class  Comp():
             self.model1.load_weights(hdf5_file)
         if os.path.exists(self.filename):
             self.hyouka.load_weights(self.filename)
-        X,Y = np.array(X_train),np.array(Y_train)
+        X,Y = np.array(X_train),np.array(Y_train)        
         X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
         if train:
             self.model1.fit(X,Y)
         res = self.model1.predict(X)
-        scores = self.calscore(res[0],X_train)
-        res = (res + np.array(np.float32(scores)) ) / 2
+        scores = self.calscore(res[0],X_train)  
+        res = (res + np.array(scores) ) / 2
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
