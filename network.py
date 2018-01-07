@@ -54,10 +54,7 @@ class  Comp():
         X,Y = np.array(X),np.array(Y)
         X = np.reshape(np.float32(X),(-1,8,8,1))
         Y = np.reshape(Y,(-1,1,1,1))
-        if os.path.exists(self.filename):
-            self.hyouka.load_weights(self.filename)
         self.hyouka.fit(X,Y)
-        self.hyouka.save_weights(self.filename)
         
     def calscore(self,result,X):
         X = np.float32(np.reshape(np.array(X),(1,64)))
@@ -76,6 +73,8 @@ class  Comp():
         hdf5_file = 'sente-model.hdf5'
         if os.path.exists(hdf5_file):
             self.model1.load_weights(hdf5_file)
+        if os.path.exists(self.filename):
+            self.hyouka.load_weights(self.filename)
         X,Y = np.array(X_train),np.array(Y_train)        
         X = np.reshape(np.float32(X),(1,64))
         Y = np.reshape(np.float32(Y),(1,64))
@@ -84,6 +83,7 @@ class  Comp():
         self.model1.save_weights(hdf5_file)
         self.gakushu(X_train,Z)
         scores = self.calscore(res[0],X_train)  
+        self.hyouka.save_weights(self.filename)
         res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
         while True:
             s = np.argmax(res)
