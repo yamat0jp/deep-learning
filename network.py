@@ -66,8 +66,7 @@ class  Comp():
                     s = False
                     break
                 elif temp[i][j] == 1:
-                    k += 1
-                        
+                    k += 1                        
             if s == False:
                 break
         if (s == True)and(k > 32):
