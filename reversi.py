@@ -216,18 +216,27 @@ def hyouka():
     i = 0
     x = stone_grid.item
     corner = [x.grid[0][0],x.grid[0][7],x.grid[7][0],x.grid[7][7]]
+    n_corner = [x.grid[0][1],x.grid[1][1],x.grid[1][0],
+                x.grid[0][6],x.grid[1][6],x.grid[1][7],
+                x.grid[6][0],x.grid[6][1],x.grid[7][1],
+                x.grid[6][6],x.grid[6][7],x.grid[7][6]]
     for y in corner:
         if y == black:
-            i += 2
+            i += 3
         elif y == white:
-            i -= 2
+            i -= 3
+    for y in n_corner:
+        if y == black:
+            i -= 1
+        if y == white:
+            i += 1
     corner = [(0,0),(0,7),(7,0),(7,7)]
     for y in corner:
         if stone_grid.CanSetStone(black,y[0],y[1],False) == True:
-            i += 1
+            i += 2
             stone_grid.item.grid[y[0]][y[1]] = none
         elif stone_grid.CanSetStone(white,y[0],y[1],False) == True:
-            i -= 1
+            i -= 2
             stone_grid.item.grid[y[0]][y[1]] = none
     return i
     
