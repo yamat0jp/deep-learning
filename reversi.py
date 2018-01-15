@@ -239,7 +239,17 @@ def hyouka():
             i -= 2
             stone_grid.item.grid[y[0]][y[1]] = none
     return i
-    
+
+def GetBanmen(X,pos):
+    stone_grid.buffer.Assign(stone_grid.item)
+    for i in range(8):
+        for j in range(8):
+            stone_grid.item[i][j] = X[i][j]
+    stone_grid.CanSetStone(Player.index,pos[0],pos[1],True)
+    s = Grid()
+    s.Assign(stone_grid.item)
+    stone_grid.item.Assign(stone_grid.buffer)
+    return s
         
 def CompStone():
     stone_grid.active = False

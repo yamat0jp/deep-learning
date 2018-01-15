@@ -4,11 +4,11 @@ Created on 2017/12/25
 @author: fukemasashi
 '''
 from keras.models import Sequential
-from keras.layers import Dense,Dropout,Activation,Flatten,Reshape
-from keras.layers import InputLayer,Conv2D,LSTM,MaxPooling2D,GRU
-from keras.layers.embeddings import Embedding
+from keras.layers import Dense,Activation,Flatten,Dropout
+from keras.layers import InputLayer,Conv2D
 import numpy as np
 import os
+from reversi import GetBanmen
 
 class  Comp():
     def __init__(self):
@@ -75,24 +75,24 @@ class  Comp():
         Y = np.reshape(Y,(1,1))
         self.hyouka.fit(X,Y)
         
-    def calscore(self,result,X):
+    def calscore(self,X,result):
         if len(self.past) < 5:
             return None
-        X = np.float32(np.reshape(np.array(X),(1,64)))
         s = []
-        for x in range(len(result)):
-            if result[x] != 0:
-                X[0][x] = 1
+        for i in range(8):
+            for j in range(8):
+                if result[i][j] == 0:
+                    s.append(0)
+                    continue
                 if len(self.past) == 5:
                     temp = self.past[0]
                     self.past.pop(0)
-                self.past.append(np.reshape(X,(8,8)))
-                s.append(self.hyouka.predict(np.reshape(np.float32(self.past),(-1,8,8,5))))
-                X[0][x] = 0
+                s = np.reshape(np.array(GetBanmen(X,(i,j))),(8,8))
+                self.past.append(s)
+                t = self.hyouka.predict(np.reshape(np.float32(self.past),(-1,8,8,5)))
+                s.extend(t[0])
                 self.past.pop(len(self.past)-1)
                 self.past.insert(0,temp)
-            else:
-                s.append(0)
         return s
     
     def sente_stone(self,X_train,Y_train,Z):
@@ -111,7 +111,7 @@ class  Comp():
         res = self.model1.predict(X)
         self.model1.save_weights(hdf5_file)
         self.gakushu(Z)
-        scores = self.calscore(res[0],X_train) 
+        scores = self.calscore(X_train,Y_train) 
         self.hyouka.save_weights(self.filename)
         if scores != None:
             res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
