@@ -29,7 +29,6 @@ class  Comp():
         self.hyouka.add(Dense(10))
         self.hyouka.add(Activation('relu'))
         self.hyouka.add(Dense(1))
-        self.hyouka.add(Activation('softmax'))
     
         self.hyouka.compile(
             loss='binary_crossentropy',
@@ -112,7 +111,7 @@ class  Comp():
         res = self.model1.predict(X)
         self.model1.save_weights(hdf5_file)
         self.gakushu(Z)
-        scores = self.calscore(res[0],X_train)  
+        scores = self.calscore(res[0],X_train) 
         self.hyouka.save_weights(self.filename)
         if scores != None:
             res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
