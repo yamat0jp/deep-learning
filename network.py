@@ -8,7 +8,6 @@ from keras.layers import Dense,Activation,Flatten,Dropout
 from keras.layers import InputLayer,Conv2D
 import numpy as np
 import os
-from reversi import GetBanmen
 
 class  Comp():
     def __init__(self):
@@ -76,13 +75,14 @@ class  Comp():
         self.hyouka.fit(X,Y)
         
     def calscore(self,X,result):
+        from reversi import GetBanmen
         if len(self.past) < 5:
             return None
         s = []
         for i in range(8):
             for j in range(8):
                 if result[i][j] == 0:
-                    s.append(0)
+                    np.append(s,0)
                     continue
                 if len(self.past) == 5:
                     temp = self.past[0]
@@ -90,7 +90,7 @@ class  Comp():
                 s = np.reshape(np.array(GetBanmen(X,(i,j))),(8,8))
                 self.past.append(s)
                 t = self.hyouka.predict(np.reshape(np.float32(self.past),(-1,8,8,5)))
-                s.extend(t[0])
+                np.append(s,t)
                 self.past.pop(len(self.past)-1)
                 self.past.insert(0,temp)
         return s
@@ -115,6 +115,7 @@ class  Comp():
         self.hyouka.save_weights(self.filename)
         if scores != None:
             res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
+            print(scores)
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:

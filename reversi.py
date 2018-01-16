@@ -7,6 +7,7 @@ import pygame,os,sys
 from pygame.locals import *
 from network import Comp
 
+
 none, black, white = 0,1,2
 
 size = 50
@@ -241,15 +242,12 @@ def hyouka():
     return i
 
 def GetBanmen(X,pos):
-    stone_grid.buffer.Assign(stone_grid.item)
+    grid = StoneGrid()
     for i in range(8):
         for j in range(8):
-            stone_grid.item[i][j] = X[i][j]
-    stone_grid.CanSetStone(Player.index,pos[0],pos[1],True)
-    s = Grid()
-    s.Assign(stone_grid.item)
-    stone_grid.item.Assign(stone_grid.buffer)
-    return s
+            grid.item.grid[i][j] = X[i][j]
+    grid.CanSetStone(black,pos[0],pos[1],True)
+    return grid.item.grid
         
 def CompStone():
     stone_grid.active = False
