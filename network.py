@@ -81,10 +81,10 @@ class  Comp():
         from reversi import GetBanmen
         if len(self.past) < 5:
             return None
-        s = []
+        s = []     
         for i in range(8):
             for j in range(8):
-                if result[i][j] != 0:
+                if result[i][j] == 0:
                     s.append(0)
                     continue
                 k = GetBanmen(X,(i,j))
@@ -94,7 +94,6 @@ class  Comp():
                 if len(self.past) == 5:
                     temp = self.past[0]
                     self.past.pop(0)
-                print('true')
                 self.past.append(k)
                 t = self.hyouka.predict(np.reshape(np.float32(self.past),(-1,8,8,5)))
                 s.append(t[0])
@@ -121,7 +120,6 @@ class  Comp():
         scores = self.calscore(X_train,Y_train) 
         self.hyouka.save_weights(self.filename)
         if scores:
-            print(scores)
             res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
         while True:
             s = np.argmax(res)
