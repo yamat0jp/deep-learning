@@ -246,8 +246,10 @@ def GetBanmen(X,pos):
     for i in range(8):
         for j in range(8):
             grid.item.grid[i][j] = X[i][j]
-    grid.CanSetStone(black,pos[0],pos[1],True)
-    return grid.item.grid
+    if grid.CanSetStone(black,pos[0],pos[1],True) == True:
+        return grid.item.grid
+    else:
+        return None
         
 def CompStone():
     stone_grid.active = False

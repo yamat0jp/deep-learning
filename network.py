@@ -67,8 +67,11 @@ class  Comp():
                     k += 1                        
             if s == False:
                 break
-        if (s == True)and(k > 32):
-            Y += 10
+        if s == True:
+            if k > 32:
+                Y += 10
+            else:
+                Y -= 10
         X,Y = np.array(self.past),np.array(Y)
         X = np.reshape(np.float32(self.past),(-1,8,8,5))
         Y = np.reshape(Y,(1,1))
@@ -81,16 +84,20 @@ class  Comp():
         s = []
         for i in range(8):
             for j in range(8):
-                if result[i][j] == 0:
-                    np.append(s,0)
+                if result[i][j] != 0:
+                    s.append(0)
+                    continue
+                k = GetBanmen(X,(i,j))
+                if k == None:
+                    s.append(0)
                     continue
                 if len(self.past) == 5:
                     temp = self.past[0]
                     self.past.pop(0)
-                s = np.reshape(np.array(GetBanmen(X,(i,j))),(8,8))
-                self.past.append(s)
+                print('true')
+                self.past.append(k)
                 t = self.hyouka.predict(np.reshape(np.float32(self.past),(-1,8,8,5)))
-                np.append(s,t)
+                s.append(t[0])
                 self.past.pop(len(self.past)-1)
                 self.past.insert(0,temp)
         return s
@@ -113,9 +120,9 @@ class  Comp():
         self.gakushu(Z)
         scores = self.calscore(X_train,Y_train) 
         self.hyouka.save_weights(self.filename)
-        if scores != None:
-            res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
+        if scores:
             print(scores)
+            res = (res + np.reshape(np.array(scores),(1,64)) ) / 2
         while True:
             s = np.argmax(res)
             if res[0][s] == 0:
